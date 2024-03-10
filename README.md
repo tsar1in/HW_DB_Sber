@@ -1,1 +1,1 @@
-# SberTech-2024-Database-HW
+# -SberTech-2024-Database-HW
