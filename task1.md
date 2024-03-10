@@ -3,7 +3,7 @@
 ## 1. Установил докер.
 Установил Docker с оффициального [сайта](https://docs.docker.com/desktop/install/mac-install/) и открыл его:
 
-![](1.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/1.png)
 
 ## 2. Скачать нужный контейнер MongoDB.
 Скачал нужный контейнер с оффициального [сайта](https://phoenixnap.com/kb/docker-mongodb) MongoDB.
@@ -19,7 +19,7 @@ sudo docker pull mongo
 sudo docker run -it -v mongodata:/data/db --name mongodb -d mongo
 ```
 
-![](2.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/2.png)
 
 ## 3. Загрузка датасета.
 
@@ -59,7 +59,7 @@ root@0f37b59ad913: cd home
 root@0f37b59ad913: mongoimport -d jeopardy -c jeopardy  --type csv --file jeopardy.csv  --headerline
 ```
 
-![](3.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/3.png)
 
 ## 4. Выполнение различных запросов
 
@@ -72,7 +72,7 @@ use jeopardy
 db.jeopardy.find().limit(5)
 ```
 
-![](4.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/4.png)
 
 Для начала напишем INSERT-запрос, чтобы проверить, что все работает:
 ```sh
@@ -99,7 +99,7 @@ db.jeopardy.insertMany([
   }
 ])
 ```
-![](10.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/10.png)
 
 Теперь нужно немного привести датасет в порядок. Мы будет анализировать метрику Value, то есть деньги. Но она представлена в неудобном формате строкой с символом "$". Нужно преобразовать Value в целое число.
 
@@ -108,7 +108,7 @@ db.jeopardy.insertMany([
 db.jeopardy.deleteMany({"Value": NaN})
 ```
 
-![](5.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/5.png)
 
 Далее напишем UPDATE-запрос, для того чтобы поменять строку вида "$1000", нам нужно сначала взять подстроку (все кроме первого символа), за это отвечает функция
 ```sh
@@ -120,31 +120,31 @@ db.jeopardy.find().forEach( function (ch) {
     ); 
 });
 ```
-![](6.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/6.png)
 
 Теперь мы можем писать различные SELECT-запросы, например давайте выведем все записи, в которых Value меньше чем 9900$ или Category равно HISTORY
 ```sh
 db.jeopardy.find({$or :[{'Value': {$lt: 9900}}, {"Category": "HISTORY"}]})
 ```
-![](7.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/7.png)
 
 Теперь хотелось бы посмотреть на диапазон дат в этом датасете, для этого надо вывести максимальную и минимальную даты. Первый способ, через sort:
 ```sh
 db.jeopardy.find().sort({'Air Date': -1 }).limit(1)
 db.jeopardy.find().sort({'Air Date': 1}).limit(1)
 ```
-![](8.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/8.png)
 
 Либо второй способ через агригирующую функцию max:
 ```sh
 db.jeopardy.aggregate([{$group: {_id: 1, max_w: {$max: "$Air Date"}}}])
 db.jeopardy.aggregate([{$group: {_id: 1, max_w: {$min: "$Air Date"}}}])
 ```
-![](9.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/9.png)
 
 С помощью агригирующей функции можно также смотреть максимальную и минимальную дату с группировкой по полю, например по полю Round:
 
-![](11.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/11.png)
 
 ## 5. Создание индекса
 
@@ -156,14 +156,14 @@ db.jeopardy.aggregate([{$group: {_id: 1, max_w: {$min: "$Air Date"}}}])
 db.jeopardy.aggregate([{$group: {_id: "$Air Date", "sum_by_day" : {$sum: "$Value"}}}])
 ```
 
-![](12.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/12.png)
 
 Так теперь посмотрим за какое время этот запрос выполняется, для этого добавим приписку к запросу:
 ```sh
 db.jeopardy.aggregate([{$group: {_id: "$Air Date", "sum_by_day" : {$sum: "$Value"}}}]).explain("executionStats")
 ```
 
-![](13.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/13.png)
 
 Получаем время выполнения запроса - 1074 мс.
 
@@ -171,12 +171,12 @@ db.jeopardy.aggregate([{$group: {_id: "$Air Date", "sum_by_day" : {$sum: "$Value
 ```sh
 db.jeopardy.createIndex({"Air Date": 1})
 ```
-![](15.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/15.png)
 
 И проверим производительность теперь:
 ```sh
 db.jeopardy.aggregate([{$group: {_id: "$Air Date", "sum_by_day" : {$sum: "$Value"}}}]).explain("executionStats")
 ```
-![](14.png)
+![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/14.png)
 
 Теперь время исполнения запроса уменьшилось до 138 мс, то есть уменьшилось практически в 10 раз!
