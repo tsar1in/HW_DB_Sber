@@ -189,6 +189,7 @@ docker stop my-redis-cluster-nodes-redis-node-1-1
 docker exec -it my-redis-cluster-nodes-redis-node-2-1 redis-cli
 ```
 И проверяем доступность ключа
+
 ![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/118.png)
 
 
