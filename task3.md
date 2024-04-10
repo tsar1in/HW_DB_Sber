@@ -44,7 +44,7 @@ curl -X GET http://admin:1234@127.0.0.1:5984/test_database
 ```
 ![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/Images/208.png)
 
-7) Теперь в приложенный в дз файл html пропишем ссылку и название нашей БД
+7) Теперь в приложенный в дз [файл](https://github.com/tsar1in/HW_DB_Sber/blob/main/task3_files/ДЗ3.html) html пропишем ссылку и название нашей БД
 ```
 const DBS = {
     // Создаем локальную БД и коннектимся к удаленной 
@@ -71,4 +71,4 @@ curl -H "Content-Type: application/json" -X POST http://admin:1234@127.0.0.1:598
     
 ![](https://github.com/tsar1in/HW_DB_Sber/blob/main/images/212.png)
 
-12) Перезапустим ДЗ3.html и нажмем опять sync данные (фамилия и имя) сохранились в бд и по прежнему выводятся
+12) Перезапустим ДЗ3.html и нажмем опять sync данные (фамилия и имя) сохранились в бд и по прежнему выводятся. Сохраняем полученный [файл](https://github.com/tsar1in/HW_DB_Sber/blob/main/task3_files/WithMyName.html) html
